@@ -1,0 +1,49 @@
+import 'package:covid_19_tracker_with_api/app/services/api_keys.dart';
+import 'package:flutter/cupertino.dart';
+
+import 'package:flutter/foundation.dart';
+
+enum Endpoint {
+  cases,
+  casesSuspected,
+  casesConfirmed,
+  deaths,
+  recovered,
+}
+
+class API {
+  API({required this.apiKey});
+  final String apiKey;
+
+  factory API.sandbox() {
+    return API(apiKey: APIKeys.ncovSandboxKey);
+  }
+
+  static final String host = 'apigw.nubentos.com';
+  static final int port = 443;
+  static final String basePath = 't/nubentos.com/ncovapi/1.0.0';
+  Uri tokenUri() {
+    return Uri(
+      scheme: 'https',
+      host: host,
+      path: 'token',
+    );
+  }
+
+  Uri endpointUri(Endpoint endpoint) {
+    return Uri(
+      scheme: 'https',
+      host: host,
+      port: port,
+      path: '$basePath/${_paths[endpoint]}',
+    );
+  }
+
+  static Map<Endpoint, String> _paths = {
+    Endpoint.cases: 'cases',
+    Endpoint.casesSuspected: 'casesSuspected',
+    Endpoint.casesConfirmed: 'casesConfirmed',
+    Endpoint.deaths: 'deaths',
+    Endpoint.recovered: 'recovered',
+  };
+}
